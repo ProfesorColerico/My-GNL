@@ -6,7 +6,7 @@
 /*   By: wiljimen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 15:49:01 by wiljimen          #+#    #+#             */
-/*   Updated: 2023/11/08 09:52:05 by wiljimen         ###   ########.fr       */
+/*   Updated: 2023/11/13 09:40:17 by wiljimen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <fcntl.h>
+# include <limits.h>
 
 # ifndef BUFFER_SIZE
 #	define BUFFER_SIZE 30

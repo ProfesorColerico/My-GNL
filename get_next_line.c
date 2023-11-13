@@ -6,7 +6,7 @@
 /*   By: wiljimen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 15:48:34 by wiljimen          #+#    #+#             */
-/*   Updated: 2023/11/08 11:58:56 by wiljimen         ###   ########.fr       */
+/*   Updated: 2023/11/13 09:47:20 by wiljimen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ char	*ft_auxtowrite(int fd, char *aux)
 	read_bytes = 1;
 	line = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!line)
+	{
+		free(line);
 		return (NULL);
+	}
 	while (!ft_strchr(aux, '\n') && read_bytes != 0)
 	{
 		read_bytes = read(fd, aux, BUFFER_SIZE);
@@ -38,10 +41,11 @@ char	*ft_auxtowrite(int fd, char *aux)
 
 char	*get_next_line(int fd)
 {
-	char	*aux;
+	static char	*aux;
 	char	*result;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	aux = (char *)malloc(sizeof((char) * (BUFFER_SIZE + 1));
+	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE == INT_MAX || aux == NULL)
 		return (NULL);
 	result = ft_auxtowrite(fd, aux);
 	return (result);
