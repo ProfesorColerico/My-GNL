@@ -6,11 +6,21 @@
 /*   By: wiljimen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 14:33:56 by wiljimen          #+#    #+#             */
-/*   Updated: 2023/10/30 15:44:29 by wiljimen         ###   ########.fr       */
+/*   Updated: 2023/11/13 12:15:18 by wiljimen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
 
 char	*ft_strjoin(char const *s1, const char *s2)
 {
@@ -54,12 +64,25 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-size_t	ft_strlen(const char *s)
+char	*ft_strcprinter(char *aux)
 {
-	size_t	i;
-
+	char	*retstr;
+	int		i;
+	
 	i = 0;
-	while (s[i] != '\0')
+	while(aux[i] && aux[i] != '\n')
 		i++;
-	return (i);
+	retstr = (char *)malloc(sizeof(char) * (i + 2));
+	while (aux[i] && aux[i] != '\n')
+	{
+		retstr[i] = aux[i];
+		i++;
+	}
+	if (aux[i] == '\n')
+	{
+		retstr[i] = aux[i];
+		i++;
+	}
+	retstr[i] = '\0';
+	return (retstr);
 }

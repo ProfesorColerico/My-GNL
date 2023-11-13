@@ -6,33 +6,32 @@
 /*   By: wiljimen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 15:48:34 by wiljimen          #+#    #+#             */
-/*   Updated: 2023/11/13 09:47:20 by wiljimen         ###   ########.fr       */
+/*   Updated: 2023/11/13 12:21:11 by wiljimen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_auxtowrite(int fd, char *aux)
+char	*ft_auxwrite(int fd, char *aux)
 {
 	char	*line;
-	size_t	read_bytes;
+	int		read_bytes;
 
 	read_bytes = 1;
 	line = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!line)
 	{
-		free(line);
 		return (NULL);
 	}
 	while (!ft_strchr(aux, '\n') && read_bytes != 0)
 	{
-		read_bytes = read(fd, aux, BUFFER_SIZE);
+		read_bytes = read(fd, line, BUFFER_SIZE);
 		if (read_bytes == -1)
 		{
 			free(line);
 			return (NULL);
 		}
-		aux[read_bytes] = '\0';
+		line[read_bytes] = '\0';
 		ft_strjoin(aux, line);
 	}
 	free(line);
@@ -41,12 +40,15 @@ char	*ft_auxtowrite(int fd, char *aux)
 
 char	*get_next_line(int fd)
 {
-	static char	*aux;
-	char	*result;
+	char		*aux[4096];
+	static char	*result;
 
-	aux = (char *)malloc(sizeof((char) * (BUFFER_SIZE + 1));
-	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE == INT_MAX || aux == NULL)
+	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE == INT_MAX)
+	{
 		return (NULL);
-	result = ft_auxtowrite(fd, aux);
+	}
+	aux[fd] = ft_auxwrite(fd, aux[fd]);
+	result = ft_strcprinter(aux[fd]);
+	free(aux);
 	return (result);
 }
