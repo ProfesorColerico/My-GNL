@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: wiljimen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/25 15:48:34 by wiljimen          #+#    #+#             */
-/*   Updated: 2023/11/13 12:21:11 by wiljimen         ###   ########.fr       */
+/*   Created: 2023/11/13 15:32:39 by wiljimen          #+#    #+#             */
+/*   Updated: 2023/11/15 20:30:25 by wiljimen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,13 @@ char	*ft_auxwrite(int fd, char *aux)
 {
 	char	*line;
 	int		read_bytes;
+	char	*save;
 
 	read_bytes = 1;
 	line = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!line)
-	{
 		return (NULL);
-	}
-	while (!ft_strchr(aux, '\n') && read_bytes != 0)
+	while (!aux || (!ft_strchr(aux, '\n') && read_bytes != 0))
 	{
 		read_bytes = read(fd, line, BUFFER_SIZE);
 		if (read_bytes == -1)
@@ -32,7 +31,9 @@ char	*ft_auxwrite(int fd, char *aux)
 			return (NULL);
 		}
 		line[read_bytes] = '\0';
-		ft_strjoin(aux, line);
+		save = aux;
+		aux = ft_strjoin_aux(aux, line);
+		free(save);
 	}
 	free(line);
 	return (aux);
@@ -40,15 +41,63 @@ char	*ft_auxwrite(int fd, char *aux)
 
 char	*get_next_line(int fd)
 {
-	char		*aux[4096];
-	static char	*result;
+	static char	*aux;
+	char		*result;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE == INT_MAX)
+		return (NULL);
+	aux = ft_auxwrite(fd, aux);
+	if (!aux || !aux[0])
 	{
+		free(aux);
+		aux = NULL;
 		return (NULL);
 	}
-	aux[fd] = ft_auxwrite(fd, aux[fd]);
-	result = ft_strcprinter(aux[fd]);
-	free(aux);
+	result = ft_strcprinter(&aux);
 	return (result);
 }
+
+char	*ft_strcprinter(char **s)
+{
+	char	*retstr;
+	char	*aux;
+	int		i;
+
+	i = 0;
+	aux = *s;
+	while (*s && (*s)[i] && (*s)[i] != '\n')
+		i++;
+	if ((*s) && (*s)[i] == '\n')
+		i++;
+	retstr = ft_substr(*s, 0, i);
+	*s = ft_substr(*s, i, ft_strlen_aux((const char *)*s));
+	if (!*s)
+		free(*s);
+	free(aux);
+	if (!retstr[0])
+	{
+		free(retstr);
+		retstr = NULL;
+	}
+	return (retstr);
+}
+
+/*
+int	main(void)
+{
+	char	*file;
+	int		fd;
+	char	*str;
+
+	file = "Prueba.txt";
+	fd = open(file, O_RDONLY);
+	str = get_next_line(fd);
+	while (str)
+	{
+		printf("%s", str);
+		str = get_next_line(fd);
+		free(str);
+	}
+	system("leaks -q a.out");
+	return(0);
+}*/

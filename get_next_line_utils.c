@@ -6,23 +6,23 @@
 /*   By: wiljimen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 14:33:56 by wiljimen          #+#    #+#             */
-/*   Updated: 2023/11/13 12:15:18 by wiljimen         ###   ########.fr       */
+/*   Updated: 2023/11/20 12:48:13 by wiljimen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *s)
+size_t	ft_strlen_aux(const char *s)
 {
 	size_t	i;
 
 	i = 0;
-	while (s[i])
+	while (s && s[i])
 		i++;
 	return (i);
 }
 
-char	*ft_strjoin(char const *s1, const char *s2)
+char	*ft_strjoin_aux(char const *s1, const char *s2)
 {
 	char	*str;
 	size_t	i;
@@ -30,15 +30,15 @@ char	*ft_strjoin(char const *s1, const char *s2)
 
 	i = 0;
 	j = 0;
-	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	str = malloc(sizeof(char) * (ft_strlen_aux(s1) + ft_strlen_aux(s2) + 1));
 	if (str == NULL)
 		return (NULL);
-	while (s1[i] != '\0')
+	while (s1 && s1[i])
 	{
 		str[i] = s1[i];
 		i++;
 	}
-	while (s2[j] != '\0')
+	while (s2 && s2[j])
 	{
 		str[i] = s2[j];
 		j++;
@@ -64,25 +64,48 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-char	*ft_strcprinter(char *aux)
+char	*ft_strdup(const char *s1)
 {
-	char	*retstr;
-	int		i;
-	
+	char	*copy;
+	size_t	i;
+	size_t	srclen;
+
 	i = 0;
-	while(aux[i] && aux[i] != '\n')
-		i++;
-	retstr = (char *)malloc(sizeof(char) * (i + 2));
-	while (aux[i] && aux[i] != '\n')
+	srclen = ft_strlen_aux(s1);
+	copy = malloc(sizeof(char) * srclen + 1);
+	if (copy == NULL)
+		return (NULL);
+	while (s1 && s1[i])
 	{
-		retstr[i] = aux[i];
+		copy[i] = (*(char *)&s1[i]);
 		i++;
 	}
-	if (aux[i] == '\n')
+	copy[i] = '\0';
+	return (copy);
+}
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	char	*sub;
+	size_t	slen;
+	size_t	i;
+
+	i = 0;
+	if (s == NULL)
+		return (NULL);
+	slen = ft_strlen_aux(s);
+	if (len > slen - start)
+		len = slen - start;
+	if (start >= slen)
+		return (ft_strdup(""));
+	sub = malloc(sizeof(char) * (len + 1));
+	if (sub == NULL)
+		return (NULL);
+	while (i < len)
 	{
-		retstr[i] = aux[i];
+		sub[i] = s[start + i];
 		i++;
 	}
-	retstr[i] = '\0';
-	return (retstr);
+	sub[i] = '\0';
+	return (sub);
 }
