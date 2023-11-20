@@ -6,7 +6,7 @@
 /*   By: wiljimen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 15:32:39 by wiljimen          #+#    #+#             */
-/*   Updated: 2023/11/15 20:30:25 by wiljimen         ###   ########.fr       */
+/*   Updated: 2023/11/20 12:57:20 by wiljimen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ char	*ft_auxwrite(int fd, char *aux)
 		if (read_bytes == -1)
 		{
 			free(line);
+			free(aux);
 			return (NULL);
 		}
 		line[read_bytes] = '\0';
